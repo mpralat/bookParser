@@ -10,6 +10,7 @@ class Book:
         self._chapters = []
         self._encoding = encoding
         self._word_count = 0
+        self._year = self._path.split("_")[-1][:-4]
 
     def read_book(self) -> None:
         with open(self._path, 'r', encoding = self._encoding) as file:
@@ -28,14 +29,30 @@ class Book:
             self._word_count += len(sent)
             self._chapters[-1].get('sentences').append(sent)
             self._chapters[-1]['words'] += len(sent.split(' '))
-    @property
-    def get_chapters(self):
-        return self._chapters
 
     def count_distinct_words(self):
         sentences_in_chapter = [chapter.get('sentences') for chapter in self._chapters]
         distinct_words = set(item for sentences in sentences_in_chapter for sentence in sentences for item in sentence.split(' '))
-        print(len(distinct_words))
         leng = sum(chapter.get('words') for chapter in self._chapters)
-        print(leng)
         self._distinct_words_count = len(distinct_words)
+
+    def __str__(self):
+        return "Path: {}\nyear:{}\nchapters: {}\nwords: {}\ndistinct words: {}".format(
+            self._path, self._year, len(self._chapters), self._word_count, self._distinct_words_count
+        )
+
+    @property
+    def get_chapters(self):
+        return self._chapters
+
+    @property
+    def get_year(self):
+        return self._year
+
+    @property
+    def get_words(self):
+        return self._word_count
+
+    @property
+    def get_distinct_words(self):
+        return self._distinct_words_count
